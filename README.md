@@ -3,7 +3,7 @@ About trajopt
 
 Home: https://github.com/tesseract-robotics/trajopt
 
-Package license: 
+Package license: BSD-2-Clause
 
 Feedstock license: [BSD-3-Clause](https://github.com/tesseract-robotics/trajopt-feedstock/blob/master/LICENSE.txt)
 
@@ -21,6 +21,9 @@ Current release info
 
 | Name | Downloads | Version | Platforms |
 | --- | --- | --- | --- |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-trajopt--ifopt-green.svg)](https://anaconda.org/tesseract-robotics/trajopt-ifopt) | [![Conda Downloads](https://img.shields.io/conda/dn/tesseract-robotics/trajopt-ifopt.svg)](https://anaconda.org/tesseract-robotics/trajopt-ifopt) | [![Conda Version](https://img.shields.io/conda/vn/tesseract-robotics/trajopt-ifopt.svg)](https://anaconda.org/tesseract-robotics/trajopt-ifopt) | [![Conda Platforms](https://img.shields.io/conda/pn/tesseract-robotics/trajopt-ifopt.svg)](https://anaconda.org/tesseract-robotics/trajopt-ifopt) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-trajopt--sco-green.svg)](https://anaconda.org/tesseract-robotics/trajopt-sco) | [![Conda Downloads](https://img.shields.io/conda/dn/tesseract-robotics/trajopt-sco.svg)](https://anaconda.org/tesseract-robotics/trajopt-sco) | [![Conda Version](https://img.shields.io/conda/vn/tesseract-robotics/trajopt-sco.svg)](https://anaconda.org/tesseract-robotics/trajopt-sco) | [![Conda Platforms](https://img.shields.io/conda/pn/tesseract-robotics/trajopt-sco.svg)](https://anaconda.org/tesseract-robotics/trajopt-sco) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-trajopt--utils-green.svg)](https://anaconda.org/tesseract-robotics/trajopt-utils) | [![Conda Downloads](https://img.shields.io/conda/dn/tesseract-robotics/trajopt-utils.svg)](https://anaconda.org/tesseract-robotics/trajopt-utils) | [![Conda Version](https://img.shields.io/conda/vn/tesseract-robotics/trajopt-utils.svg)](https://anaconda.org/tesseract-robotics/trajopt-utils) | [![Conda Platforms](https://img.shields.io/conda/pn/tesseract-robotics/trajopt-utils.svg)](https://anaconda.org/tesseract-robotics/trajopt-utils) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-vhacd-green.svg)](https://anaconda.org/tesseract-robotics/vhacd) | [![Conda Downloads](https://img.shields.io/conda/dn/tesseract-robotics/vhacd.svg)](https://anaconda.org/tesseract-robotics/vhacd) | [![Conda Version](https://img.shields.io/conda/vn/tesseract-robotics/vhacd.svg)](https://anaconda.org/tesseract-robotics/vhacd) | [![Conda Platforms](https://img.shields.io/conda/pn/tesseract-robotics/vhacd.svg)](https://anaconda.org/tesseract-robotics/vhacd) |
 
 Installing trajopt
@@ -33,16 +36,16 @@ conda config --add channels tesseract-robotics
 conda config --set channel_priority strict
 ```
 
-Once the `tesseract-robotics` channel has been enabled, `vhacd` can be installed with:
+Once the `tesseract-robotics` channel has been enabled, `trajopt-ifopt, trajopt-sco, trajopt-utils, vhacd` can be installed with:
 
 ```
-conda install vhacd
+conda install trajopt-ifopt trajopt-sco trajopt-utils vhacd
 ```
 
-It is possible to list all of the versions of `vhacd` available on your platform with:
+It is possible to list all of the versions of `trajopt-ifopt` available on your platform with:
 
 ```
-conda search vhacd --channel tesseract-robotics
+conda search trajopt-ifopt --channel tesseract-robotics
 ```
 
 
@@ -73,4 +76,5 @@ In order to produce a uniquely identifiable distribution:
 Feedstock Maintainers
 =====================
 
+* [@johnwason](https://github.com/johnwason/)
 

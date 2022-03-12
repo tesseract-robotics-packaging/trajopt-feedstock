@@ -1,15 +1,47 @@
+{% set version = "0.2.2" %}
+
 package:
-  name: trajopt
-  version: 0.2.2
+  name: trajopt-pkg
+  version: {{ version }}
 
 source:
   - git_url: https://github.com/tesseract-robotics/trajopt.git
-    git_rev: 0.2.2
+    git_rev: {{ version }}
+    folder: src
+    patches:
+      - trajopt_ros_win_fix.patch # [win]
+      - trajopt_ros_linux_fix.patch # [linux]
 
 build:
-  number: 0
+  number: 1
 
 outputs:
+  - name: trajopt-utils
+    script: build_utils.sh # [unix]
+    script: bld_utils.bat # [win]
+    requirements:
+      build:
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
+        - gtest
+        - gmock
+        - cmake
+        - ninja # [win]
+        - make # [linux]
+        - ros-industrial-cmake-boilerplate
+      host:
+        - eigen
+        - console_bridge
+        - boost-cpp
+      run:
+        - eigen
+        - bullet
+    test:
+      commands:
+        - test -f ${PREFIX}/include/trajopt_utils/utils.hpp  # [unix]
+        - test -f ${PREFIX}/lib/cmake/trajopt_utils/trajopt_utils-config.cmake # [unix]
+        - if not exist %LIBRARY_PREFIX%\include\trajopt_utils\utils.hpp (exit 1)  # [win]
+        - if not exist %LIBRARY_PREFIX%\lib\cmake\trajopt_utils\trajopt_utils-config.cmake (exit 1)  # [win]
   - name: vhacd
     script: build_vhacd.sh # [unix]
     script: bld_vhacd.bat # [win]
@@ -23,15 +55,174 @@ outputs:
         - ninja # [win]
         - make # [linux]
         - ros-industrial-cmake-boilerplate
+      host:
         - eigen
         - console_bridge
-        - boost
-        - tesseract-robotics-util
+        - boost-cpp
+        - trajopt-utils
+      run:
+        - eigen
+        - bullet-cpp
+        - trajopt-utils
+    test:
+      commands:
+        - test -f ${PREFIX}/include/vhacd/VHACD.h  # [unix]
+        - test -f ${PREFIX}/lib/libvhacd.so  # [unix]
+        - test -f ${PREFIX}/lib/cmake/vhacd/vhacd-config.cmake # [unix]
+        - if not exist %LIBRARY_PREFIX%\include\vhacd\VHACD.h (exit 1)  # [win]
+        - if not exist %LIBRARY_PREFIX%\lib\vhacd.lib (exit 1)  # [win]
+        - if not exist %LIBRARY_PREFIX%\bin\vhacd.dll (exit 1)  # [win]
+        - if not exist %LIBRARY_PREFIX%\lib\cmake\vhacd\vhacd-config.cmake (exit 1)  # [win]
+  - name: trajopt-sco
+    script: build_sco.sh # [unix]
+    script: bld_sco.bat # [win]
+    requirements:
+      build:
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
+        - gtest
+        - gmock
+        - cmake
+        - ninja # [win]
+        - make # [linux]
+        - ros-industrial-cmake-boilerplate
+      host:
+        - eigen
+        - console_bridge
+        - boost-cpp
+        - jsoncpp
+        - osqp
+        - trajopt-utils
       run:
         - eigen
         - bullet
-        - tesseract-robotics-util
+        - jsoncpp
+        - console_bridge
+        - osqp
+        - trajopt-utils
+        - boost-cpp
+  - name: trajopt-ifopt
+    script: build_ifopt.sh # [unix]
+    script: bld_ifopt.bat # [win]
+    requirements:
+      build:
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
+        - gtest
+        - gmock
+        - cmake
+        - ninja # [win]
+        - make # [linux]
+        - ros-industrial-cmake-boilerplate
+        - pkg-config
+      host:
+        - eigen
+        - console_bridge
+        - boost-cpp
+        - trajopt-utils
+        - ifopt
+        - tesseract-robotics-collision
+        - tesseract-robotics-environment
+      run:
+        - eigen
+        - bullet
+        - console_bridge
+        - trajopt-utils
+        - boost-cpp
+        - ifopt
+        - tesseract-robotics-collision
+        - tesseract-robotics-environment
+    test:
+      commands:
+        - test -f ${PREFIX}/include/trajopt_ifopt/trajopt_ifopt.h  # [unix]
+        - test -f ${PREFIX}/lib/libtrajopt_ifopt.so  # [unix]
+        - test -f ${PREFIX}/lib/cmake/trajopt_ifopt/trajopt_ifopt-config.cmake # [unix]
+        - if not exist %LIBRARY_PREFIX%\include\trajopt_ifopt\trajopt_ifopt.h (exit 1)  # [win]
+        - if not exist %LIBRARY_PREFIX%\lib\trajopt_ifopt.lib (exit 1)  # [win]
+        - if not exist %LIBRARY_PREFIX%\bin\trajopt_ifopt.dll (exit 1)  # [win]
+        - if not exist %LIBRARY_PREFIX%\lib\cmake\trajopt_ifopt\trajopt_ifopt-config.cmake (exit 1)  # [win]
+  - name: trajopt-sqp
+    script: build_sqp.sh # [unix]
+    script: bld_sqp.bat # [win]
+    requirements:
+      build:
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
+        - gtest
+        - gmock
+        - cmake
+        - ninja # [win]
+        - make # [linux]
+        - ros-industrial-cmake-boilerplate
+        - pkg-config
+      host:
+        - eigen
+        - console_bridge
+        - boost-cpp
+        - osqp
+        - osqp-eigen
+        - trajopt-utils
+        - trajopt-ifopt        
+        - tesseract-robotics-common
+        - tesseract-robotics-visualization
+      run:
+        - eigen
+        - console_bridge
+        - boost-cpp
+        - osqp
+        - osqp-eigen
+        - trajopt-utils
+        - trajopt-ifopt        
+        - tesseract-robotics-common
+        - tesseract-robotics-visualization
+    test:
+      commands:
+        - test -f ${PREFIX}/include/trajopt_sqp/types.h  # [unix]
+        - test -f ${PREFIX}/lib/libtrajopt_sqp.so  # [unix]
+        - test -f ${PREFIX}/lib/cmake/trajopt_sqp/trajopt_sqp-config.cmake # [unix]
+        - if not exist %LIBRARY_PREFIX%\include\trajopt_sqp\types.h (exit 1)  # [win]
+        - if not exist %LIBRARY_PREFIX%\lib\trajopt_sqp.lib (exit 1)  # [win]
+        - if not exist %LIBRARY_PREFIX%\bin\trajopt_sqp.dll (exit 1)  # [win]
+        - if not exist %LIBRARY_PREFIX%\lib\cmake\trajopt_sqp\trajopt_sqp-config.cmake (exit 1)  # [win]
+  - name: trajopt
+    script: build_trajopt.sh # [unix]
+    script: bld_trajopt.bat # [win]
+    requirements:
+      build:
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
+        - gtest
+        - gmock
+        - cmake
+        - ninja # [win]
+        - make # [linux]
+        - ros-industrial-cmake-boilerplate
+        - pkg-config
+      host:
+        - eigen
+        - console_bridge
+        - boost-cpp
+        - trajopt-utils
+        - trajopt-sco
+        - tesseract-robotics-environment
+        - tesseract-robotics-visualization
+        - jsoncpp
+      run:
+        - eigen
+        - console_bridge
+        - boost-cpp
+        - trajopt-utils
+        - trajopt-sco
+        - tesseract-robotics-environment
+        - tesseract-robotics-visualization
+        - jsoncpp
 
 about:
   home: https://github.com/tesseract-robotics/trajopt
   summary: Trajectory Optimization Motion Planner
+  license: BSD-2-Clause
+  license_file: src/trajopt/LICENSE
+
+extra:
+  recipe-maintainers:
+    - johnwason
