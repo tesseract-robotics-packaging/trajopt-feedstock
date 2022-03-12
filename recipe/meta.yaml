@@ -222,6 +222,7 @@ outputs:
         - tesseract-robotics-environment
         - tesseract-robotics-visualization
         - jsoncpp
+        
 
 about:
   home: https://github.com/tesseract-robotics/trajopt
