@@ -9,7 +9,7 @@ cmake -GNinja ^
   -S src\trajopt_optimizers\trajopt_sqp ^
   -B build_sqp_dir
 if %errorlevel% neq 0 exit /b %errorlevel%
-cmake --build build_sqp_dir --config Release 
+cmake --build build_sqp_dir --config Release -- -j 1
 if %errorlevel% neq 0 exit /b %errorlevel%
 cmake --build build_sqp_dir --config Release --target install
 if %errorlevel% neq 0 exit /b %errorlevel%

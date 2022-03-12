@@ -9,7 +9,7 @@ cmake -GNinja ^
   -S src\trajopt_ifopt ^
   -B build_ifopt_dir
 if %errorlevel% neq 0 exit /b %errorlevel%
-cmake --build build_ifopt_dir --config Release 
+cmake --build build_ifopt_dir --config Release -- -j 1
 if %errorlevel% neq 0 exit /b %errorlevel%
 cmake --build build_ifopt_dir --config Release --target install
 if %errorlevel% neq 0 exit /b %errorlevel%
