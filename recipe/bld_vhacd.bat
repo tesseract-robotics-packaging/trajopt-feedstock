@@ -9,7 +9,7 @@ cmake -GNinja ^
   -S src\trajopt_ext/vhacd ^
   -B build_vhacd_dir
 if %errorlevel% neq 0 exit /b %errorlevel%
-cmake --build build_vhacd_dir --config Release -j 4
+cmake --build build_vhacd_dir --config Release 
 if %errorlevel% neq 0 exit /b %errorlevel%
 cmake --build build_vhacd_dir --config Release --target install
 if %errorlevel% neq 0 exit /b %errorlevel%
