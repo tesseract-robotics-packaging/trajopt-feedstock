@@ -9,8 +9,8 @@ source:
     git_rev: {{ version }}
     folder: src
     patches:
-      - trajopt_ros_win_fix.patch # [win]
-      - trajopt_ros_linux_fix.patch # [linux]
+      - trajopt_ros_win_fix.patch 
+      # - trajopt_ros_linux_fix.patch # [linux]
 
 build:
   number: 1
