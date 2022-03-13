@@ -222,6 +222,15 @@ outputs:
         - tesseract-robotics-environment
         - tesseract-robotics-visualization
         - jsoncpp
+    test:
+      commands:
+        - test -f ${PREFIX}/include/trajopt/common.hpp  # [unix]
+        - test -f ${PREFIX}/lib/libtrajopt.so  # [unix]
+        - test -f ${PREFIX}/lib/cmake/trajopt/trajopt-config.cmake # [unix]
+        - if not exist %LIBRARY_PREFIX%\include\trajopt\common.hpp (exit 1)  # [win]
+        - if not exist %LIBRARY_PREFIX%\lib\trajopt.lib (exit 1)  # [win]
+        - if not exist %LIBRARY_PREFIX%\bin\trajopt.dll (exit 1)  # [win]
+        - if not exist %LIBRARY_PREFIX%\lib\cmake\trajopt\trajopt-config.cmake (exit 1)  # [win]
         
 
 about:
