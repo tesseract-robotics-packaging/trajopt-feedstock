@@ -9,11 +9,10 @@ source:
     git_rev: {{ version }}
     folder: src
     patches:
-      - trajopt_ros_win_fix.patch 
-      # - trajopt_ros_linux_fix.patch # [linux]
+      - trajopt_fix.patch 
 
 build:
-  number: 2
+  number: 4
 
 outputs:
   - name: trajopt-utils
