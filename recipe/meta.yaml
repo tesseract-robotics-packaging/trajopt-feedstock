@@ -1,23 +1,28 @@
-{% set version = "0.2.2" %}
+{% set version = "0.7.2" %}
 
 package:
   name: trajopt-pkg
   version: {{ version }}
 
 source:
-  - git_url: https://github.com/tesseract-robotics/trajopt.git
-    git_rev: {{ version }}
-    folder: src
+  - url: https://github.com/tesseract-robotics/trajopt/archive/refs/tags/{{ version }}.tar.gz
+    sha256: ffea3b303b605928202227f81a224aada2b7fe5b50811cfd6f032f132e9fbc89
+    folder: src/trajopt
     patches:
-      - trajopt_fix.patch 
+      - trajopt-patch.patch
 
 build:
-  number: 5
+  number: 0
 
 outputs:
-  - name: trajopt-utils
-    script: build_utils.sh # [unix]
-    script: bld_utils.bat # [win]
+  - name: trajopt-common
+    build:
+      script_env:
+        - SUBPKG_SRC_DIR=src/trajopt/trajopt_common
+        - SUBPKG_BUILD_DIR=build/trajopt_common
+    script: build_pkg.sh # [unix]
+    script: bld_pkg.bat # [win]
+    version: {{ version }}
     requirements:
       build:
         - {{ compiler('c') }}
@@ -31,19 +36,30 @@ outputs:
       host:
         - eigen
         - console_bridge
-        - boost-cpp
+        - libboost-devel
+        - tesseract-robotics-common
+        - tesseract-robotics-collision
+        - tesseract-robotics-kinematics
+        - ros-industrial-cmake-boilerplate
       run:
         - eigen
-        - bullet
+        - tesseract-robotics-common
+        - tesseract-robotics-collision
+        - tesseract-robotics-kinematics
     test:
       commands:
-        - test -f ${PREFIX}/include/trajopt_utils/utils.hpp  # [unix]
-        - test -f ${PREFIX}/lib/cmake/trajopt_utils/trajopt_utils-config.cmake # [unix]
-        - if not exist %LIBRARY_PREFIX%\include\trajopt_utils\utils.hpp (exit 1)  # [win]
-        - if not exist %LIBRARY_PREFIX%\lib\cmake\trajopt_utils\trajopt_utils-config.cmake (exit 1)  # [win]
+        - test -f ${PREFIX}/include/trajopt_common/utils.hpp  # [unix]
+        - test -f ${PREFIX}/lib/cmake/trajopt_common/trajopt_common-config.cmake # [unix]
+        - if not exist %LIBRARY_PREFIX%\include\trajopt_common\utils.hpp (exit 1)  # [win]
+        - if not exist %LIBRARY_PREFIX%\lib\cmake\trajopt_common\trajopt_common-config.cmake (exit 1)  # [win]
   - name: vhacd
-    script: build_vhacd.sh # [unix]
-    script: bld_vhacd.bat # [win]
+    build:
+      script_env:
+        - SUBPKG_SRC_DIR=src/trajopt/trajopt_ext/vhacd
+        - SUBPKG_BUILD_DIR=build/vhacd
+    script: build_pkg.sh # [unix]
+    script: bld_pkg.bat # [win]
+    version: {{ version }}
     requirements:
       build:
         - {{ compiler('c') }}
@@ -57,12 +73,14 @@ outputs:
       host:
         - eigen
         - console_bridge
-        - boost-cpp
-        - trajopt-utils
+        - bullet-cpp
+        - libboost-devel
+        - ros-industrial-cmake-boilerplate
+        - trajopt-common
       run:
         - eigen
         - bullet-cpp
-        - trajopt-utils
+        - trajopt-common
     test:
       commands:
         - test -f ${PREFIX}/include/vhacd/VHACD.h  # [unix]
@@ -73,8 +91,13 @@ outputs:
         - if not exist %LIBRARY_PREFIX%\bin\vhacd.dll (exit 1)  # [win]
         - if not exist %LIBRARY_PREFIX%\lib\cmake\vhacd\vhacd-config.cmake (exit 1)  # [win]
   - name: trajopt-sco
-    script: build_sco.sh # [unix]
-    script: bld_sco.bat # [win]
+    build:
+      script_env:
+        - SUBPKG_SRC_DIR=src/trajopt/trajopt_sco
+        - SUBPKG_BUILD_DIR=build/trajopt_sco
+    script: build_pkg.sh # [unix]
+    script: bld_pkg.bat # [win]
+    version: {{ version }}
     requirements:
       build:
         - {{ compiler('c') }}
@@ -88,108 +111,27 @@ outputs:
       host:
         - eigen
         - console_bridge
-        - boost-cpp
+        - libboost-devel
         - jsoncpp
         - osqp
-        - trajopt-utils
+        - qpoases
+        - ros-industrial-cmake-boilerplate
+        - trajopt-common
       run:
         - eigen
-        - bullet
         - jsoncpp
         - console_bridge
         - osqp
-        - trajopt-utils
-        - boost-cpp
-  - name: trajopt-ifopt
-    script: build_ifopt.sh # [unix]
-    script: bld_ifopt.bat # [win]
-    requirements:
-      build:
-        - {{ compiler('c') }}
-        - {{ compiler('cxx') }}
-        - gtest
-        - gmock
-        - cmake
-        - ninja # [win]
-        - make # [linux]
-        - ros-industrial-cmake-boilerplate
-        - pkg-config
-        - {{ cdt('mesa-libgl-devel') }}  # [linux]
-        - {{ cdt('mesa-dri-drivers') }}  # [linux]
-      host:
-        - eigen
-        - console_bridge
-        - boost-cpp
-        - trajopt-utils
-        - ifopt
-        - tesseract-robotics-collision
-        - tesseract-robotics-environment
-      run:
-        - eigen
-        - bullet
-        - console_bridge
-        - trajopt-utils
-        - boost-cpp
-        - ifopt
-        - tesseract-robotics-collision
-        - tesseract-robotics-environment
-    test:
-      commands:
-        - test -f ${PREFIX}/include/trajopt_ifopt/trajopt_ifopt.h  # [unix]
-        - test -f ${PREFIX}/lib/libtrajopt_ifopt.so  # [unix]
-        - test -f ${PREFIX}/lib/cmake/trajopt_ifopt/trajopt_ifopt-config.cmake # [unix]
-        - if not exist %LIBRARY_PREFIX%\include\trajopt_ifopt\trajopt_ifopt.h (exit 1)  # [win]
-        - if not exist %LIBRARY_PREFIX%\lib\trajopt_ifopt.lib (exit 1)  # [win]
-        - if not exist %LIBRARY_PREFIX%\bin\trajopt_ifopt.dll (exit 1)  # [win]
-        - if not exist %LIBRARY_PREFIX%\lib\cmake\trajopt_ifopt\trajopt_ifopt-config.cmake (exit 1)  # [win]
-  - name: trajopt-sqp
-    script: build_sqp.sh # [unix]
-    script: bld_sqp.bat # [win]
-    requirements:
-      build:
-        - {{ compiler('c') }}
-        - {{ compiler('cxx') }}
-        - gtest
-        - gmock
-        - cmake
-        - ninja # [win]
-        - make # [linux]
-        - ros-industrial-cmake-boilerplate
-        - pkg-config
-        - {{ cdt('mesa-libgl-devel') }}  # [linux]
-        - {{ cdt('mesa-dri-drivers') }}  # [linux]
-      host:
-        - eigen
-        - console_bridge
-        - boost-cpp
-        - osqp
-        - osqp-eigen
-        - trajopt-utils
-        - trajopt-ifopt        
-        - tesseract-robotics-common
-        - tesseract-robotics-visualization
-      run:
-        - eigen
-        - console_bridge
-        - boost-cpp
-        - osqp
-        - osqp-eigen
-        - trajopt-utils
-        - trajopt-ifopt        
-        - tesseract-robotics-common
-        - tesseract-robotics-visualization
-    test:
-      commands:
-        - test -f ${PREFIX}/include/trajopt_sqp/types.h  # [unix]
-        - test -f ${PREFIX}/lib/libtrajopt_sqp.so  # [unix]
-        - test -f ${PREFIX}/lib/cmake/trajopt_sqp/trajopt_sqp-config.cmake # [unix]
-        - if not exist %LIBRARY_PREFIX%\include\trajopt_sqp\types.h (exit 1)  # [win]
-        - if not exist %LIBRARY_PREFIX%\lib\trajopt_sqp.lib (exit 1)  # [win]
-        - if not exist %LIBRARY_PREFIX%\bin\trajopt_sqp.dll (exit 1)  # [win]
-        - if not exist %LIBRARY_PREFIX%\lib\cmake\trajopt_sqp\trajopt_sqp-config.cmake (exit 1)  # [win]
+        - qpoases
+        - trajopt-common
   - name: trajopt
-    script: build_trajopt.sh # [unix]
-    script: bld_trajopt.bat # [win]
+    build:
+      script_env:
+        - SUBPKG_SRC_DIR=src/trajopt/trajopt
+        - SUBPKG_BUILD_DIR=build/trajopt
+    script: build_pkg.sh # [unix]
+    script: bld_pkg.bat # [win]
+    version: {{ version }}
     requirements:
       build:
         - {{ compiler('c') }}
@@ -206,17 +148,17 @@ outputs:
       host:
         - eigen
         - console_bridge
-        - boost-cpp
-        - trajopt-utils
+        - libboost-devel
+        - trajopt-common
         - trajopt-sco
+        - ros-industrial-cmake-boilerplate
         - tesseract-robotics-environment
         - tesseract-robotics-visualization
         - jsoncpp
       run:
         - eigen
         - console_bridge
-        - boost-cpp
-        - trajopt-utils
+        - trajopt-common
         - trajopt-sco
         - tesseract-robotics-environment
         - tesseract-robotics-visualization
@@ -230,7 +172,6 @@ outputs:
         - if not exist %LIBRARY_PREFIX%\lib\trajopt.lib (exit 1)  # [win]
         - if not exist %LIBRARY_PREFIX%\bin\trajopt.dll (exit 1)  # [win]
         - if not exist %LIBRARY_PREFIX%\lib\cmake\trajopt\trajopt-config.cmake (exit 1)  # [win]
-        
 
 about:
   home: https://github.com/tesseract-robotics/trajopt
