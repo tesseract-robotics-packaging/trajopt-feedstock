@@ -177,7 +177,7 @@ about:
   home: https://github.com/tesseract-robotics/trajopt
   summary: Trajectory Optimization Motion Planner
   license: BSD-2-Clause
-  license_file: src/trajopt/LICENSE
+  license_file: src/trajopt/trajopt/LICENSE
 
 extra:
   recipe-maintainers:
