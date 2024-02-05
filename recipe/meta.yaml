@@ -12,7 +12,7 @@ source:
       - trajopt-patch.patch
 
 build:
-  number: 0
+  number: 1
 
 outputs:
   - name: trajopt-common
