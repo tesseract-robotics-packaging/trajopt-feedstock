@@ -10,10 +10,7 @@ mv src/trajopt_optimizers/trajopt_sqp src/trajopt_sqp
 for p in trajopt_common trajopt_sco trajopt_ifopt trajopt trajopt_sqp; do
 
   cmake -GNinja \
-    -DCMAKE_INSTALL_PREFIX:PATH=$PREFIX \
-    -DCMAKE_PREFIX_PATH:PATH=$PREFIX \
-    -DCMAKE_BUILD_TYPE:STRING=Release \
-    -DCMAKE_INSTALL_LIBDIR=lib \
+    ${CMAKE_ARGS} \
     -DBUILD_SHARED_LIBS=ON \
     -DTESSERACT_ENABLE_TESTING=OFF \
     -DTESSERACT_ENABLE_EXAMPLES=OFF \

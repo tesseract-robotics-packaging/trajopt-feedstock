@@ -10,9 +10,7 @@ move src\trajopt_optimizers\trajopt_sqp src\trajopt_sqp
 
 for %%p in (trajopt_common trajopt_sco trajopt_ifopt trajopt trajopt_sqp) do (
   cmake -GNinja ^
-    -DCMAKE_INSTALL_PREFIX:PATH="%LIBRARY_PREFIX%" ^
-    -DCMAKE_PREFIX_PATH:PATH="%LIBRARY_PREFIX%" ^
-    -DCMAKE_BUILD_TYPE:STRING=Release ^
+    %CMAKE_ARGS% ^
     -DBUILD_SHARED_LIBS=ON ^
     -DUSE_MSVC_RUNTIME_LIBRARY_DLL=ON ^
     -DTESSERACT_ENABLE_TESTING=OFF ^
