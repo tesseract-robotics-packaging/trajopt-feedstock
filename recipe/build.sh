@@ -5,7 +5,9 @@ set -e
 mkdir -p src
 tar xf source.tar.gz --strip-components=1 -C src
 
-for p in trajopt_common trajopt_sco trajopt_ifopt trajopt; do
+mv src/trajopt_optimizers/trajopt_sqp src/trajopt_sqp
+
+for p in trajopt_common trajopt_sco trajopt_ifopt trajopt trajopt_sqp; do
 
   cmake -GNinja \
     -DCMAKE_INSTALL_PREFIX:PATH=$PREFIX \
